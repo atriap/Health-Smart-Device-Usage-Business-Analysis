@@ -1,8 +1,18 @@
 # Health Smart Device Usage Business Analysis
 
-This is Google Professional Certificate Final Capstone Project (Unguided), on Healthcare-Tech Company, Bellabeat. Taking the role as Marketing Data Analyst to answer some business questions to increase the sales and optimize the marketing strategy.
+This is Google Professional Certificate Final Capstone Project (Unguided), on Wellness Tech Company, Bellabeat. Taking the role as Marketing Data Analyst to answer some business questions to increase the sales and optimize the marketing strategy.
 
-Dataset source: [here](https://www.kaggle.com/datasets/arashnic/fitbit)
+
+**Scenario**:
+Bellabeat's founder and Chief Creative Officer aware that analysis of Bellabeat's users data would reveal more opportunities for growth, hence asking Marketing Data Analyst to help analyze trends from users usage. Dataset source: [here](https://www.kaggle.com/datasets/arashnic/fitbit)
+
+**Business task** : Analyze smart device usage data to gain insight into how users use their smart devices and make recommendations for developing Bellabeat marketing strategies.
+
+Questions that arise to help the analysis process:
+1. What are the trends in the use of smart devices?
+2. How can this trend be applied to Bellabeat subscribers?
+3. How can this trend help influence Bellabeat's marketing strategy?
+
 
 
 # Importing Library
@@ -149,7 +159,6 @@ hourly_steps <- hourly_steps %>%
 glimpse(hourly_steps)
 ```
 
-
 ```{r}
 hourly_calories <- hourly_calories %>%
   rename(date_time = activity_hour) %>%
@@ -164,13 +173,9 @@ glimpse(hourly_calories)
 ## Descriptive Statistics
 ```{r}
 daily_activity %>% summary()
-
 daily_sleep %>% summary()
-
 hourly_sleep %>% summary()
-
 hourly_steps %>% summary()
-
 hourly_calories %>% summary()
 ```
 
@@ -224,7 +229,6 @@ head(daily_activity_sleep)
 sum(is.na(daily_activity_sleep))
 n_distinct(daily_activity_sleep$id)
 
-
 # Modifying dataset by dividing dates into days of the week
 
 daily_activity_sleep <- daily_activity_sleep %>%
@@ -234,23 +238,20 @@ head(daily_activity_sleep)
 sum(is.na(daily_activity_sleep))
 ```
 
-
-
 ## Calculating users habit
 
 ### Sleeping log
 
 ```{r}
-
 daily_activity_sleep %>%
   group_by(day) %>%
   summarise(app_log = n()) %>%
   ggplot(aes(day, app_log, fill = day)) + 
   geom_bar(stat = "identity") + 
   labs(x=NULL,title="Application log (sleeping habit)")
-
-
 ```
+
+
 It is known that the number of users who enter their sleep data is only 24 people out of 33 participants. The graph shows that they do not do it every day, but most often between Tuesdays and Thursdays.
 
 
@@ -258,8 +259,6 @@ It is known that the number of users who enter their sleep data is only 24 peopl
 ## Grouping users into activity intensity categories
 
 ```{r}
-
-
 user_intensities <- daily_activity_sleep %>% 
   group_by(id) %>%
   rename(sedentary = sedentary_minutes, light = lightly_active_minutes, fair = fairly_active_minutes, very = very_active_minutes) %>%
@@ -281,9 +280,6 @@ user_intensities %>%
   ggplot(aes(intensities, fill = intensities)) + 
   geom_bar() + 
   labs(title="User intensities", x=NULL, y="users")
-
-
-
 ```
 Based on the dataset, most of Bellabeat users are those who are active.
 
@@ -291,14 +287,11 @@ Based on the dataset, most of Bellabeat users are those who are active.
 ## User intensities per Day of the week
 
 ```{r fig.height=10, fig.width=12}
-
-
 user_intensities %>%   
   ggplot(aes(day, fill = day)) + 
   geom_bar() + 
   labs(title="Intensities per Day", x=NULL) +
   facet_wrap(~ intensities)
-
 ```
 Most of users do sedentary activities in Sunday and heavy activities in Tuesday
 
@@ -307,37 +300,27 @@ Most of users do sedentary activities in Sunday and heavy activities in Tuesday
 ## Plotting the correlation between activity intensities and calories burned
 
 ```{r}
-
-
 ggplot(user_intensities, aes(x=sedentary, y= calories)) + 
 geom_point() + geom_smooth() +
   labs(title="Sedentary Activity vs. Calories burned", x="sedentary activity minutes")
-
 
 ggplot(user_intensities, aes(x=light, y= calories)) + 
 geom_point() + geom_smooth() +
   labs(title="Light Activity vs. Calories burned", x="light activity minutes")
 
-
-
 ggplot(user_intensities, aes(x=fair, y= calories)) + 
 geom_point() + geom_smooth() +
   labs(title="Fairly Active Activity vs. Calories burned", x="fairly active activity minutes")
 
-
-
 ggplot(user_intensities, aes(x=very, y= calories)) + 
 geom_point() + geom_smooth() +
   labs(title="Heavy Activity vs. Calories burned", x="heavy activity minutes")
-
-
+  
 user_intensities %>%
   mutate(total_activity = sedentary+light+fair+very) %>%
   ggplot(aes(x=total_activity, y= calories)) + 
   geom_point() + geom_smooth() +
   labs(title="Total Activity vs. Calories burned", x="total activity minutes")
-
-
 ```
 
 Heavy activity becomes the only type of activities that have positive correlation with amount of calories burned. The heavier the activity, the more calories burned.
@@ -347,11 +330,9 @@ Heavy activity becomes the only type of activities that have positive correlatio
 ## Calculating users sleeping habit into categories
 
 
-Sleep category per hours based on https://www.cdc.gov/sleep/about_sleep/how_much_sleep.html
-
+Sleep category per hours divided based on https://www.cdc.gov/sleep/about_sleep/how_much_sleep.html
 
 ```{r}
-
 user_sleep_steps <- daily_activity_sleep %>% 
   group_by(id) %>%
   mutate(mean_sleep = mean(total_minutes_asleep), mean_steps = mean(total_steps)) %>%
@@ -366,49 +347,33 @@ user_sleep_steps <- daily_activity_sleep %>%
 
 head(user_sleep_steps)
 glimpse(user_sleep_steps)
-
-
-
 ```
 
 
 ## Calculating number of users with their sleeping habit
 
 ```{r}
-
 ggplot(user_sleep_steps, aes(sleep_quality, fill = sleep_quality)) +
   geom_bar() +
 labs(x=NULL, fill="Users sleep quality")
-
 ```
 
 ## Comparing the mean of steps taken each user with their sleep quality
 
-
 ```{r}
-
 ggplot(user_sleep_steps, aes(sleep_quality, mean_steps, fill = sleep_quality)) +
 geom_bar(position = "dodge", stat = "identity") +
 labs(x=NULL, fill="Steps and sleep quality")
-
-
 ```
 
 ## Plotting correlation between total steps taken and total sleeping minutes
 
 ```{r}
-
-
 ggplot(daily_activity_sleep, aes(x=total_steps, y= total_minutes_asleep)) + 
 geom_point() + geom_smooth() +
   labs(title="Total steps vs. Sleep Duration", x="Total steps", y="Sleep duration") 
-
-
-
 ```
-
 The graph shows no correlation between total steps taken and sleep duration.
-
 
 
 ## Plotting correlation between total activites throughout the day and total sleeping minutes
@@ -416,56 +381,44 @@ The graph shows no correlation between total steps taken and sleep duration.
 heavy activity is chosen to check the correlation
 
 ```{r}
-
 user_intensities %>%
   mutate(total_activity = sedentary+light+fair+very) %>%
   ggplot(aes(x=total_activity, y= total_minutes_asleep)) + 
   geom_point() + geom_smooth() +
   labs(title="Total active time vs. Sleep duration")
 
-
 ggplot(user_intensities, aes(y= total_minutes_asleep, x=very)) + 
 geom_point() + geom_smooth() +
   labs(title="Heavy activity time vs. Sleep duration", y="Total minutes asleep", x="Heavy activity (minutes)")
-
 ```
 The graph above shows that there is a negative correlation between total activity time and sleep duration. The longer activity time in a day, the less the sleep duration.
 
 
-
-
-2. Hourly steps and hourly calories including 33 unique user ids.
+# 2. Hourly steps and hourly calories including 33 unique user ids.
 
 ```{r}
-
 hourly_steps_cal <- left_join(hourly_steps, hourly_calories, by=c("id", "date_time"))
 
 glimpse(hourly_steps_cal)
 head(hourly_steps_cal)
 sum(is.na(hourly_steps_cal))
 n_distinct(hourly_steps_cal$id)
-
-
 ```
 
-# Dividing time of the Day
+## Dividing time of the Day
 
 ```{r}
-
 breaks <- hour(hm("00:00", "6:00", "12:00", "18:00", "23:59"))
 
 labels <- c("Night", "Morning", "Afternoon", "Evening")
 
 hourly_steps_cal %>%
   mutate(time_of_day = cut(x=hour(date_time), breaks = breaks, labels = labels, include.lowest=TRUE))
-  
 ```
 
 ## Plotting amount of calories burned based on time of the day
 
-
 ```{r fig.height=10, fig.width=12}
-
 hourly_steps_cal %>% 
   separate(date_time, sep = " ", into = c("date","time")) %>% 
   mutate(date = as_date(date), time = format(parse_date_time(as.character(time), "HMS"), format = "%H:%M")) %>%
@@ -473,29 +426,14 @@ hourly_steps_cal %>%
   geom_bar(position = "dodge", stat = "identity") +
   labs(x=NULL, fill="Hour")
 
-
 hourly_steps_cal %>%
   mutate(time_of_day = cut(x=hour(date_time), breaks = breaks, labels = labels, include.lowest=TRUE)) %>%
   ggplot(aes(time_of_day, calories, fill=time_of_day)) +
 geom_bar(position = "dodge", stat = "identity") +
 labs(x=NULL, fill="Time of the day")
-
-
 ```
 
-
-
 ```{r}
-
-head(hourly_steps_cal)
-
-```
-
-
-
-
-```{r}
-
 # modifying dataset to separate date and time column
 
 hourly_steps_cal <- hourly_steps_cal %>% 
@@ -506,42 +444,33 @@ hourly_steps_cal <- hourly_steps_cal %>%
          
 head(hourly_steps_cal)
 n_distinct(hourly_steps_cal$id)
-
-
 ```
 
 ## Plotting amount of calories burned based on Day of the week
 
 ```{r}
-
 ggplot(hourly_steps_cal, aes(day, calories, fill = day)) +
 geom_bar(position = "dodge", stat = "identity") +
 labs(x=NULL, title="Calories burned per day", fill="Day")
-
 ```
 
 ## Plotting amount of total steps taken each Day
 
 ```{r}
-
-
 ggplot(hourly_steps_cal, aes(day, step_total, fill = day)) +
 geom_bar(position = "dodge", stat = "identity") +
 labs(x=NULL, y="Total steps", title="Total steps per Day", fill="Day")
-
-
 ```
 
 ## Plotting correlation between total steps taken and amount of calories burned
 
 ```{r}
-
 ggplot(hourly_steps_cal, aes(x=step_total, y= calories)) + 
 geom_point() + geom_smooth() +
   labs(title="Total steps vs. Calories Burned", x="Total steps", y="Calories burned")
-
-
 ```
+The graph shows positive correlations between total steps taken each day and amount of calories burned
+
 
 # Conclusion
 
