@@ -28,6 +28,21 @@ There are 18 files in CSV format that available. What user informations are avai
 - Sleeps (daily, minutes)
 - MET (minutes)
 
+**Decide** and **focus** on which datasets are relevant and can answer the questions. In this case, I choose the following datasets:
+- Activity (daily)
+- Sleep (daily, minutes)
+- Calories (minute)
+- Steps (hourly)
+- Heart rate
+
+The reason for choosing these datasets is because the data in the `intensity` dataset is sufficiently summarized in the `daily activity` dataset. Meanwhile, the `calories` and `steps` dataset only in minutes because its daily amount is already summarized the `daily activity`. Meanwhile, the reason for choosing the heart rate dataset is to see trends in their daily activities.
+
+
+### Define the initial hypothesis based on prior knowledge
+- Hours of sleep affect a person's activity, and vice versa. For example, people whose sleeping hours are less than ideal will affect their activities become lighter / sedentary, and vice versa
+- The more / intense activity per day / hour, the higher the calories burned
+- The more steps, the higher the calories burned
+- The heavier the activity, the higher the heart rate
 
 
 ### Importing Library
