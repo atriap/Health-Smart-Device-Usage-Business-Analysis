@@ -5,6 +5,7 @@ This is Google Professional Certificate Final Capstone Project (Unguided), on He
 Dataset source: [here](https://www.kaggle.com/datasets/arashnic/fitbit)
 
 
+# Importing Library
 ```{r}
 library(tidyverse)
 library(tidyr)
@@ -16,7 +17,6 @@ library(janitor)
 
 # Importing the dataset
 ```{r}
-
 daily_activity <- read.csv("dailyActivity_merged.csv")
 head(daily_activity)
 
@@ -35,8 +35,6 @@ head(hourly_steps)
 
 heart_rate <- read.csv("heartrate_seconds_merged.csv")
 head(heart_rate)
-
-
 ```
 
 
@@ -44,36 +42,28 @@ head(heart_rate)
 
 ## Checking unique ID each dataset
 ```{r}
-
 n_distinct(daily_activity$Id)
 n_distinct(daily_sleep$Id)
 n_distinct(hourly_sleep$Id)
 n_distinct(hourly_steps$Id)
 n_distinct(hourly_calories$Id)
 n_distinct(heart_rate$Id)
-
-
 ```
-
 Heart rate dataset is removed because only contains 14 unique user ids and not representative enough
 
 
 ## Check duplicates
 ```{r}
-
 sum(duplicated(daily_activity))
 sum(duplicated(daily_sleep))
 sum(duplicated(hourly_sleep))
 sum(duplicated(hourly_calories))
 sum(duplicated(hourly_steps))
-
-
 ```
 
 
 ## Making the field name uniform and no duplicates
 ```{r}
-
 daily_activity <- daily_activity %>%
   clean_names() %>%
   unique()
@@ -81,130 +71,91 @@ daily_activity <- daily_activity %>%
 daily_sleep <- daily_sleep %>%
   clean_names() %>%
   unique()
-sum(duplicated(daily_sleep))
+sum(duplicated(daily_sleep))      # re-check the amount of NA
 
 hourly_sleep <- hourly_sleep %>%
   clean_names() %>%
   unique()
-sum(duplicated(hourly_sleep))
-
+sum(duplicated(hourly_sleep))     # re-check the amount of NA
 
 hourly_steps <- hourly_steps %>%
   clean_names() %>%
   unique()
 
-
 hourly_calories <- hourly_calories %>%
   clean_names() %>%
   unique()
-
-
-
 ```
 
 ## Checking NA
 
 ```{r}
-
 sum(is.na(daily_activity))
 sum(is.na(daily_sleep))
 sum(is.na(hourly_sleep))
 sum(is.na(hourly_steps))
 sum(is.na(hourly_calories))
-
-
 ```
-
-
-
 ## Checking Data Structures
 
 ```{r}
-
 glimpse(daily_activity)
-
-
 ```
-
-
 
 ```{r}
 glimpse(daily_sleep)
-
 glimpse(hourly_sleep)
 ```
 
-
 ```{r}
-
 glimpse(hourly_steps)
-
 ```
 
-
-
 ```{r}
-
 glimpse(hourly_calories)
-
 ```
 
 
 ## Correcting date format
 
 ```{r}
-
 daily_activity <- daily_activity %>%
   rename(date = activity_date) %>%
   mutate(date = as_date(date, format = "%m/%d/%Y"))
 
 glimpse(daily_activity)
-
-
 ```
 
-
 ```{r}
-
 daily_sleep <- daily_sleep %>%
   rename(date = sleep_day) %>%
   mutate(date = as_date(date, format = "%m/%d/%Y"))
-
 glimpse(daily_sleep)
-
-
 
 hourly_sleep <- hourly_sleep %>%
   rename(date_time = date) %>%
   mutate(date_time = as.POSIXct(date_time, format = "%m/%d/%Y %I:%M:%S %p", tz = Sys.timezone()))
-
 glimpse(hourly_sleep)
-
 ```
 
 
 ## Correcting data time format with as.POSIXct
 
 ```{r}
-
 hourly_steps <- hourly_steps %>%
   rename(date_time = activity_hour) %>%
   mutate(date_time = as.POSIXct(date_time, format = "%m/%d/%Y %I:%M:%S %p", tz = Sys.timezone()))
 
 glimpse(hourly_steps)
-
 ```
 
 
 ```{r}
-
 hourly_calories <- hourly_calories %>%
   rename(date_time = activity_hour) %>%
   mutate(date_time = as.POSIXct(date_time, format = "%m/%d/%Y %I:%M:%S %p", tz = Sys.timezone()))
 
 glimpse(hourly_calories)
-
-
 ```
 
 
@@ -212,7 +163,6 @@ glimpse(hourly_calories)
 
 ## Descriptive Statistics
 ```{r}
-
 daily_activity %>% summary()
 
 daily_sleep %>% summary()
@@ -222,15 +172,11 @@ hourly_sleep %>% summary()
 hourly_steps %>% summary()
 
 hourly_calories %>% summary()
-
-
 ```
 
 ## Plotting users habit: Application log 
 
-
 ```{r}
-
 daily_activity %>%
   mutate(day = weekdays(date)) %>%
   group_by(day) %>%
@@ -238,8 +184,6 @@ daily_activity %>%
   ggplot(aes(day, app_log, fill = day)) + 
   geom_bar(stat = "identity") + 
   labs(x=NULL,y="num of logs", title="Application log")
-
-
 ```
 Bellabeat users did not use the application every day. Most of them only use the application / wearing the gadget in Tuesday - Thursday.
 
@@ -247,8 +191,7 @@ Bellabeat users did not use the application every day. Most of them only use the
 ## Plotting User activities category distribution using a pie chart
 
 ```{r fig.height=8, fig.width=10}
-
-library(ggrepel)
+library(ggrepel)              # importing another library to make visualization labels
 
 daily_activity %>%
   summarise(sedentary_mins = sum(sedentary_minutes), lightly_active_mins = sum(lightly_active_minutes), fairly_active_mins = sum(fairly_active_minutes), very_active_mins = sum(very_active_minutes)) %>%
@@ -262,23 +205,18 @@ daily_activity %>%
   geom_label_repel(aes(label = percentage),
             position = position_stack(vjust = 0.5), show.legend=F) +
   coord_polar(theta = "y")
-
-
-
 ```
 
 
 # Analysis and Visualization
 
 ## Merging datasets
-
 Merging datasets needed to observe correlation between two variables.
 
 
-1. Daily activity and daily sleep record including 24 unique user ids.
+# 1. Daily activity and daily sleep record including 24 unique user ids.
 
 ```{r}
-
 daily_activity_sleep <- left_join(daily_activity, daily_sleep, by=c("id", "date")) %>% drop_na()
 
 glimpse(daily_activity_sleep)
@@ -287,16 +225,13 @@ sum(is.na(daily_activity_sleep))
 n_distinct(daily_activity_sleep$id)
 
 
-# modified dataset
+# Modifying dataset by dividing dates into days of the week
 
 daily_activity_sleep <- daily_activity_sleep %>%
   mutate(day = weekdays(date)) %>%
   select(id, day, date, everything())
 head(daily_activity_sleep)
 sum(is.na(daily_activity_sleep))
-
-
-
 ```
 
 
