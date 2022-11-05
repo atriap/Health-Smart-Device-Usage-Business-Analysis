@@ -368,7 +368,7 @@ user_intensities %>%
 Heavy activity becomes the only type of activities that have positive correlation with amount of calories burned. The heavier the activity, the more calories burned.
 
 #### Dividing users sleeping habit into categories
-Sleep is needed after doing activities every day. In this step, the trend of the user's sleep habits will be monitored based on the category of sleep hours divided by (CDC)[https://www.cdc.gov/sleep/about_sleep/how_much_sleep.html].
+Sleep is needed after doing activities every day. In this step, the trend of the user's sleep habits will be monitored based on the category of sleep hours divided by [CDC](https://www.cdc.gov/sleep/about_sleep/how_much_sleep.html).
 ```{r}
 user_sleep_steps <- daily_activity_sleep %>% 
   group_by(id) %>%
@@ -385,7 +385,7 @@ user_sleep_steps <- daily_activity_sleep %>%
 head(user_sleep_steps)
 glimpse(user_sleep_steps)
 ```
-<img width="455" alt="image" src="https://user-images.githubusercontent.com/104981673/199957068-96940438-070c-427d-9d9c-1dc626d6e1c1.png">
+<img width="700" alt="image" src="https://user-images.githubusercontent.com/104981673/199957068-96940438-070c-427d-9d9c-1dc626d6e1c1.png">
 
 
 #### Calculating number of users with their sleeping habit
