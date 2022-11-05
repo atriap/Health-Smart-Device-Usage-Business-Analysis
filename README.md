@@ -56,7 +56,6 @@ The Data is **not ROCC** hence it is a bad data. But i still will continue do th
 - The heavier the activity, the higher the heart rate
 
 
-
 Then, start preparing the data for analysis, starting from importing libraries needed in R Studio.
 ### Importing Library
 ```{r}
@@ -215,6 +214,7 @@ hourly_steps %>% summary()
 hourly_calories %>% summary()
 ```
 
+After knowing the descriptive statistics for each datasets, start exploring trends in their habits.
 ### Plotting users habit: Application log 
 
 ```{r}
@@ -228,11 +228,11 @@ daily_activity %>%
 ```
 ![image](https://user-images.githubusercontent.com/104981673/199954592-2dc74d76-bff9-4231-8c37-1b1147bad815.png)
 
-The graph above shows that Bellabeat users did not use the application every day. Most of them only use the application / wearing the gadget in **Tuesday - Thursday**.
+The graph above shows that Bellabeat users **did not use the application every day**. Most of them only use the application / wearing the gadget in **Tuesday - Thursday**.
 
 
 ### Plotting User activities category distribution using a pie chart
-
+How about their activity intensity each day?
 ```{r}
 library(ggrepel)              # importing another library to make visualization labels
 
@@ -251,15 +251,15 @@ daily_activity %>%
 ```
 ![image](https://user-images.githubusercontent.com/104981673/199954661-875ec325-ba4a-4037-8ed8-b736cbed6334.png)
 
-The graph shows that users do sedentary activities the most.
+The graph shows that users do sedentary activities the most on daily basis followed by light activities.
 
 ## Data Analysis and Visualization
 
 ### Merging datasets
-Merging datasets needed to observe correlation between two variables.
+For a deeper understanding of user habits, multiple data sets will be combined because they have multiple fields in common (primary key). It can also be used to observe correlation between two variables.
 
 ## 1. Daily activity and daily sleep record including 24 unique user ids.
-
+As in the previous exploration results, the number of users who entered sleep activity data was 24 users. After that, the next step is data cleaning and a brief check of the datasets after they are combined.
 ```{r}
 daily_activity_sleep <- left_join(daily_activity, daily_sleep, by=c("id", "date")) %>% drop_na()
 
@@ -278,7 +278,6 @@ sum(is.na(daily_activity_sleep))
 ```
 
 ### Calculating users habit
-
 #### Sleeping log
 
 ```{r}
@@ -291,11 +290,11 @@ daily_activity_sleep %>%
 ```
 ![image](https://user-images.githubusercontent.com/104981673/199954801-67014963-aeb0-49a1-8339-621a1346959b.png)
 
-It is known that the number of users who enter their sleep data is only 24 people out of 33 participants. The graph shows that they do not do it every day, but most often between Tuesdays and Thursdays.
+The graph shows the same trend from `daily_activity` dataset, that users did not input their sleeping data every day but most often between Tuesdays and Thursdays.
 
 
 #### Grouping users into activity intensity categories
-
+The `daily_activity` dataset reveals that there are four types of activity: sedentary, lightly active, fairly active, and very active. Now, Belabeat users will be grouped into those four types.
 ```{r}
 user_intensities <- daily_activity_sleep %>% 
   group_by(id) %>%
@@ -321,9 +320,9 @@ user_intensities %>%
 ```
 ![image](https://user-images.githubusercontent.com/104981673/199954929-ce848977-9b7a-4031-b675-0fd83849964b.png)
 
-Based on the dataset, the majority of Bellabeat users who enter their activity data completely (including their sleep activity) are the ones who are **active**.
+From the graph, it is known that based on the dataset, the majority of Bellabeat users who enter their activity data completely (including their sleep activity) are the ones who are **active**.
 
-
+How about their intensities based on day of the week? which day are they most active and most relaxed?
 #### User intensities per Day of the week
 
 ```{r fig.height=10, fig.width=12}
@@ -335,11 +334,11 @@ user_intensities %>%
 ```
 ![image](https://user-images.githubusercontent.com/104981673/199955184-c0b1e809-1263-42e4-902b-095963b43f27.png)
 
-Most of users do sedentary activities in **Sunday** and heavy activities in **Tuesday.**
+The answer is, most of users do sedentary activities in **Sunday** and heavy activities in **Tuesday.**
 
 
 #### Plotting the correlation between activity intensities and calories burned
-
+After knowing users habits related to their activity each day, how about the amount of calories burned?
 ```{r}
 ggplot(user_intensities, aes(x=sedentary, y= calories)) + 
 geom_point() + geom_smooth() +
@@ -369,9 +368,7 @@ user_intensities %>%
 Heavy activity becomes the only type of activities that have positive correlation with amount of calories burned. The heavier the activity, the more calories burned.
 
 #### Dividing users sleeping habit into categories
-
-Sleep category per hours divided based on https://www.cdc.gov/sleep/about_sleep/how_much_sleep.html
-
+Sleep is needed after doing activities every day. In this step, the trend of the user's sleep habits will be monitored based on the category of sleep hours divided by (CDC)[https://www.cdc.gov/sleep/about_sleep/how_much_sleep.html].
 ```{r}
 user_sleep_steps <- daily_activity_sleep %>% 
   group_by(id) %>%
