@@ -55,6 +55,9 @@ The Data is **not ROCC** hence it is a bad data. But i still will continue do th
 - The more steps, the higher the calories burned
 - The heavier the activity, the higher the heart rate
 
+
+
+Then, start preparing the data for analysis, starting from importing libraries needed in R Studio.
 ### Importing Library
 ```{r}
 library(tidyverse)
@@ -64,6 +67,7 @@ library(ggplot2)
 library(janitor)
 ```
 
+As stated before,this analysis will use data from 6 datasets. Then, continue to examine the data by using `head()` .
 ### Importing the dataset
 ```{r}
 daily_activity <- read.csv("dailyActivity_merged.csv")
@@ -96,7 +100,7 @@ n_distinct(hourly_steps$Id)
 n_distinct(hourly_calories$Id)
 n_distinct(heart_rate$Id)
 ```
-Heart rate dataset is removed because only contains 14 unique user ids and not representative enough
+`daily_activity`, `hourly_steps`, and `hourly_calories` consists of 33 distinct user IDs, while `daily_sleep` and `hourly_sleep` only consists of 24 user ids. `heart_rate` dataset is removed because it only contains 14 unique user ids and not representative enough (less than 50% participant).
 
 ### Check duplicates
 ```{r}
@@ -107,6 +111,7 @@ sum(duplicated(hourly_calories))
 sum(duplicated(hourly_steps))
 ```
 
+There are duplicates in `daily_sleep` and `hourly_sleep` datasets, so the following steps will be done to make the analysis easier and neat.
 ### Make field names uniform and no duplicates
 ```{r}
 daily_activity <- daily_activity %>%
@@ -115,13 +120,13 @@ daily_activity <- daily_activity %>%
 
 daily_sleep <- daily_sleep %>%
   clean_names() %>%
-  unique()
+  unique()                        # to make sure the data are unique / not duplicated
 sum(duplicated(daily_sleep))      # re-check the amount of NA
 
 hourly_sleep <- hourly_sleep %>%
   clean_names() %>%
   unique()
-sum(duplicated(hourly_sleep))     # re-check the amount of NA
+sum(duplicated(hourly_sleep))     # re-check the amount of NA after data cleaning
 
 hourly_steps <- hourly_steps %>%
   clean_names() %>%
@@ -133,7 +138,6 @@ hourly_calories <- hourly_calories %>%
 ```
 
 ### Check NA
-
 ```{r}
 sum(is.na(daily_activity))
 sum(is.na(daily_sleep))
@@ -143,8 +147,8 @@ sum(is.na(hourly_calories))
 ```
 All datasets have 0 NA value, so no further data cleaning needed.
 
+Another step done in data cleaning is to check datatypes in each datasets to make calculation and analysis easier, like calculating numbers or make categories.
 ### Check Data Structures
-
 ```{r}
 glimpse(daily_activity)
 ```
@@ -158,8 +162,7 @@ glimpse(hourly_steps)
 ```{r}
 glimpse(hourly_calories)
 ```
-
-Previous step shows that data type for `date` column is incorrect, it is *character* type and should be in *date* type
+Previous step shows that data type for `date` columnns in every datasets are incorrect, it is *character* type and should be in *date* type
 
 ### Correcting date format
 
@@ -200,8 +203,9 @@ hourly_calories <- hourly_calories %>%
 glimpse(hourly_calories)
 ```
 
-## Exploratory Data Analysis
 
+## Exploratory Data Analysis
+After the datasets are ready, the trend will be seen in each related fields for further understanding and deeper analysis.
 ### Descriptive Statistics
 ```{r}
 daily_activity %>% summary()
@@ -224,7 +228,7 @@ daily_activity %>%
 ```
 ![image](https://user-images.githubusercontent.com/104981673/199954592-2dc74d76-bff9-4231-8c37-1b1147bad815.png)
 
-Bellabeat users did not use the application every day. Most of them only use the application / wearing the gadget in **Tuesday - Thursday**.
+The graph above shows that Bellabeat users did not use the application every day. Most of them only use the application / wearing the gadget in **Tuesday - Thursday**.
 
 
 ### Plotting User activities category distribution using a pie chart
