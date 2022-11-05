@@ -5,9 +5,9 @@ This is Google Professional Certificate Final Capstone Project (Unguided), on We
 **Tools**: R - R Studio (Markdown)
 
 **Scenario**:
-Bellabeat's founder and Chief Creative Officer aware that analysis of Bellabeat's users data would reveal more opportunities for growth, hence asking Marketing Data Analyst to help analyze trends from users usage. Dataset source: [here](https://www.kaggle.com/datasets/arashnic/fitbit)
+Bellabeat's founder and Chief Creative Officer aware that analysis of health smart device users data would reveal more opportunities for growth, hence asking Marketing Data Analyst to help analyze trends from users usage. Dataset source: [here](https://www.kaggle.com/datasets/arashnic/fitbit)
 
-**Business task** : Analyze smart device usage data to gain insight into how users use their smart devices and make recommendations for developing Bellabeat marketing strategies.
+**Business task** : Analyze FitBit usage data to gain insight into how users use their smart devices and make recommendations for developing Bellabeat marketing strategies.
 
 Questions that arise to help the analysis process:
 1. What are the trends in the use of smart devices?
@@ -66,7 +66,7 @@ library(ggplot2)
 library(janitor)
 ```
 
-As stated before,this analysis will use data from 6 datasets. Then, continue to examine the data by using `head()` .
+As stated before,this analysis will use data from 6 datasets. Then, continue to examine the data briefly.
 ### Importing the dataset
 ```{r}
 daily_activity <- read.csv("dailyActivity_merged.csv")
@@ -89,7 +89,7 @@ head(heart_rate)
 ```
 
 ## Data Cleaning
-
+Most datasets are not "clean" enough. There might be duplicates, incorrect formats, missing values, and inconsistent field names. Therefore, the following steps will be done to make the data ready to be analyzed.
 ### Checking unique ID each dataset
 ```{r}
 n_distinct(daily_activity$Id)
@@ -99,7 +99,7 @@ n_distinct(hourly_steps$Id)
 n_distinct(hourly_calories$Id)
 n_distinct(heart_rate$Id)
 ```
-`daily_activity`, `hourly_steps`, and `hourly_calories` consists of 33 distinct user IDs, while `daily_sleep` and `hourly_sleep` only consists of 24 user ids. `heart_rate` dataset is removed because it only contains 14 unique user ids and not representative enough (less than 50% participant).
+`daily_activity`, `hourly_steps`, and `hourly_calories` consists of 33 distinct user IDs, while `daily_sleep` and `hourly_sleep` only consists of 24 user IDs. `heart_rate` dataset is removed because it only contains 14 unique user IDs and not representative enough (less than 50% participant).
 
 ### Check duplicates
 ```{r}
@@ -109,8 +109,8 @@ sum(duplicated(hourly_sleep))
 sum(duplicated(hourly_calories))
 sum(duplicated(hourly_steps))
 ```
-
 There are duplicates in `daily_sleep` and `hourly_sleep` datasets, so the following steps will be done to make the analysis easier and neat.
+
 ### Make field names uniform and no duplicates
 ```{r}
 daily_activity <- daily_activity %>%
@@ -228,7 +228,7 @@ daily_activity %>%
 ```
 ![image](https://user-images.githubusercontent.com/104981673/199954592-2dc74d76-bff9-4231-8c37-1b1147bad815.png)
 
-The graph above shows that Bellabeat users **did not use the application every day**. Most of them only use the application / wearing the gadget in **Tuesday - Thursday**.
+The graph above shows that FitBit users **did not use the application every day**. Most of them only use the application / wearing the gadget in **Tuesday - Thursday**.
 
 
 ### Plotting User activities category distribution using a pie chart
@@ -320,7 +320,7 @@ user_intensities %>%
 ```
 ![image](https://user-images.githubusercontent.com/104981673/199954929-ce848977-9b7a-4031-b675-0fd83849964b.png)
 
-From the graph, it is known that based on the dataset, the majority of Bellabeat users who enter their activity data completely (including their sleep activity) are the ones who are **active**.
+From the graph, it is known that based on the dataset, the majority of FitBit users who enter their activity data completely (including their sleep activity) are the ones who are **active**.
 
 How about their intensities based on day of the week? which day are they most active and most relaxed?
 #### User intensities per Day of the week
@@ -415,7 +415,7 @@ geom_point() + geom_smooth() +
 ```
 ![image](https://user-images.githubusercontent.com/104981673/199957205-0a7503b2-e51c-4b8a-948c-126f4d31c8ff.png)
 
-The graph shows no correlation between total steps taken and sleep duration.
+The graph shows **no correlation** between total amount of steps taken and sleep duration.
 
 
 #### Plotting correlation between total activites throughout the day and total sleeping minutes
@@ -436,6 +436,25 @@ geom_point() + geom_smooth() +
 ![image](https://user-images.githubusercontent.com/104981673/199957264-6ce872b7-64e4-43b6-9a8b-0a6d4f385e43.png)
 
 The graph above shows that there is a negative correlation between total activity time and sleep duration. The longer activity time in a day, the less the sleep duration.
+
+```{r}
+user_intensities %>% 
+  mutate(total_activity = (sedentary+light+fair+very), total_awake = total_time_in_bed - total_minutes_asleep) %>%
+  ggplot(aes(x=total_awake, y=total_activity)) + 
+  geom_point() + geom_smooth()
+```
+![image](https://user-images.githubusercontent.com/104981673/200128116-fd6e1ab8-7b80-49f4-b0e3-8ac5fed34477.png)
+
+The graph shows that there is a negative correlation between the total minutes awake and the time of activity carried out every day, meaning that the more active users, the longer the time they are awake even though they are already on the bed.
+
+```{r}
+user_intensities %>% 
+  mutate(total_awake = total_time_in_bed - total_minutes_asleep) %>%
+  ggplot(aes(x=day, y=total_awake, fill=day)) + 
+  geom_bar(stat="identity")
+```
+![image](https://user-images.githubusercontent.com/104981673/200128104-b05cf705-f291-49db-927c-abab0fbe4b01.png)
+From this graph, it is known that most of users are having *difficulty* to actually sleep in **Sunday**, the day before work day, Monday. 
 
 
 ## 2. Hourly steps and hourly calories including 33 unique user ids.
@@ -523,11 +542,17 @@ geom_point() + geom_smooth() +
 The graph shows positive correlations between total steps taken each day and amount of calories burned
 
 
-# Conclusion
-
+# Summary
+- Users tend to remember logging in to the application / using the device in the midweek (Tuesday-Thursday) more than weekends
+- Active users are more enthusiastic about entering their data completely than less active users 
+- The trend shows that calories are burned the most in the afternoon and least burned at the evening. It indicates that users activity is more heavy in the afternoon.
+- The more steps each day, the more calories burned. However, the number of steps per day does not affect the user's sleeping habits
+- Most of users are having *difficulty* to actually sleep in **Sunday**, the day before work day, Monday.
 
 
 # Recommendation
+## How can this trend be applied to Bellabeat subscribers?
 
+## How can this trend help influence Bellabeat's marketing strategy?
 
 
