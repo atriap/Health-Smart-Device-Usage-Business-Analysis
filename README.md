@@ -1,6 +1,6 @@
 # Health Smart Device Usage Business Analysis
 
-This is Google Professional Certificate Final Capstone Project (Unguided), on Wellness Tech Company, Bellabeat. Taking the role as Marketing Data Analyst to answer some business questions to increase the sales and optimize the marketing strategy.
+This is Google Professional Certificate Final Capstone Project (Unguided), on Wellness Tech Company, [Bellabeat](https://bellabeat.com/). Taking the role as Marketing Data Analyst to answer some business questions to increase the sales and optimize the marketing strategy.
 
 **Tools**: R - R Studio (Markdown)
 
@@ -10,9 +10,9 @@ Bellabeat's founder and Chief Creative Officer aware that analysis of health sma
 **Business task** : Analyze FitBit usage data to gain insight into how users use their smart devices and make recommendations for developing Bellabeat marketing strategies.
 
 Questions that arise to help the analysis process:
-1. What are the trends in the use of smart devices?
-2. How can this trend be applied to Bellabeat subscribers?
-3. How can this trend help influence Bellabeat's marketing strategy?
+1. [What are the trends identified?](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/edit/main/README.md#what-are-the-trends-identified)
+2. [How can this trend be applied to Bellabeat subscribers?](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/blob/main/README.md#how-can-this-trend-be-applied-to-bellabeat-subscribers)
+3. [How can this trend help influence Bellabeat's marketing strategy?](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/blob/main/README.md#how-can-this-trend-help-influence-bellabeats-marketing-strategy)
 
 
 ## Prepare
@@ -183,7 +183,7 @@ hourly_calories <- hourly_calories %>%
 
 glimpse(hourly_calories)
 ```
-
+# What are the trends identified?
 ## Exploratory Data Analysis
 After the datasets are ready, the trend will be seen in each related fields for further understanding and deeper analysis.
 ### Descriptive Statistics
@@ -382,10 +382,9 @@ The answer is, most of users have not enough sleep, means they sleep **less than
 Now we will see which category that took steps each day more
 ```{r}
 ggplot(user_sleep_steps, aes(sleep_quality, mean_steps, fill = sleep_quality)) +
-geom_bar(position = "dodge", stat = "identity") +
+geom_bar(stat = "identity") +
 labs(x=NULL, fill="Steps and sleep quality")
-```
-![image](https://user-images.githubusercontent.com/104981673/199957152-853f33e8-fea3-4fa4-a32e-5f0845690abb.png)
+```![image](https://user-images.githubusercontent.com/104981673/200159663-116db836-202b-40da-b4ce-3192582a1403.png)
 
 Users who did not have enough sleep took more steps in daily basis.
 
@@ -470,17 +469,17 @@ hourly_steps_cal %>%
   separate(date_time, sep = " ", into = c("date","time")) %>% 
   mutate(date = as_date(date), time = format(parse_date_time(as.character(time), "HMS"), format = "%H:%M")) %>%
   ggplot(aes(time, calories, fill=time)) +
-  geom_bar(position = "dodge", stat = "identity") +
+  geom_bar(stat = "identity") +
   labs(x=NULL, fill="Hour")
 
 hourly_steps_cal %>%
   mutate(time_of_day = cut(x=hour(date_time), breaks = breaks, labels = labels, include.lowest=TRUE)) %>%
   ggplot(aes(time_of_day, calories, fill=time_of_day)) +
-geom_bar(position = "dodge", stat = "identity") +
+geom_bar(stat = "identity") +
 labs(x=NULL, fill="Time of the day")
 ```
 ![amount of calories burned based on time of the day](https://user-images.githubusercontent.com/104981673/199957887-eb7e9235-2ef7-4679-892a-5df8e8a1990e.jpg)
-The graph shows that users tend to do activities that burn calories in the *Afternoon* (14.00) and rest in the *Evening*.
+The graph shows that users tend to do activities that burn calories in the *Afternoon* and rest in the *Evening*.
 
 ```{r}
 # modifying dataset to separate date and time column
@@ -498,22 +497,22 @@ n_distinct(hourly_steps_cal$id)
 We already know that users are more active in the Afternoon, but what day are they the most active?
 ```{r}
 ggplot(hourly_steps_cal, aes(day, calories, fill = day)) +
-geom_bar(position = "dodge", stat = "identity") +
+geom_bar(stat = "identity") +
 labs(x=NULL, title="Calories burned per day", fill="Day")
 ```
-![image](https://user-images.githubusercontent.com/104981673/199958029-dd530a92-bf6c-4478-baa4-685d9c8fc8d3.png)
-
+![image](https://user-images.githubusercontent.com/104981673/200159414-287b8056-fb4d-4651-9a18-ed968c80c167.png)
+Users are more active in Saturday, and then use their Sunday as their rest day.
 
 
 ### Plotting amount of total steps taken each Day
-
 ```{r}
 ggplot(hourly_steps_cal, aes(day, step_total, fill = day)) +
-geom_bar(position = "dodge", stat = "identity") +
+geom_bar(stat = "identity") +
 labs(x=NULL, y="Total steps", title="Total steps per Day", fill="Day")
 ```
-![image](https://user-images.githubusercontent.com/104981673/199958063-701aeca1-6d9a-4b57-a920-41ceb65d85a7.png)
+![image](https://user-images.githubusercontent.com/104981673/200159485-86dd1083-692c-4dac-a07a-4eac5872eaaf.png)
 
+Linear with amount of total calories burned, users take more steps in Saturday and resting in Sunday.
 
 
 ### Plotting correlation between total steps taken and amount of calories burned
@@ -531,14 +530,21 @@ The graph shows positive correlations between total steps taken each day and amo
 # Summary
 - Users tend to remember logging in to the application / using the device in the midweek (Tuesday-Thursday) more than weekends
 - Active users are more enthusiastic about entering their data completely than less active users 
-- The trend shows that calories are burned the most in the afternoon and least burned at the evening. It indicates that users activity is more heavy in the afternoon.
+- The trend shows that calories are burned the most in the afternoon and least burned at the evening. It indicates that users activity is heavier in the afternoon.
 - The more steps each day, the more calories burned. However, the number of steps per day does not affect the user's sleeping habits
+- Users are more active, tend to take more steps, burn more calories in **Saturday**, while users use **Sunday** as their rest day
 - Most of users are having *difficulty* to actually sleep in **Sunday**, the day before work day, Monday.
 
 
 # Recommendation
 ## How can this trend be applied to Bellabeat subscribers?
+Both FitBit and Bellabeat are a fitness tracker brand, but Bellabeat is more targeted for women. These trends from FitBit datasets can be used to make recommendations to optimize Bellabeat's marketing strategy since they have relatively same features, like daily activity tracker (steps, distance, calories burned, sleeping hours, heart rate monitoring, etc)
 
 ## How can this trend help influence Bellabeat's marketing strategy?
-
+Analysis can be used to develop ideas related to new features, more promotions, or targeted-ads.
+- **Pop-up notification every morning** to remind users log in their activities every day, can be started from every morning
+- **Simple activity guide** to guide users how to spend time in a day, when should they become energized and full of energy, or when they have to rest and put away their phone
+- **Encourage users to enter their data completely** by giving small gift and insightful health-related tip, like *"don't forget to log in, get 1 Point every day"* . Then the points can be used to open articles or more features. The more complete their data the more interesting the rewards.
+- **Sleeping reminder and fun fact** to encourage users have a healthy and high quality sleep, ann additional feature related to sleep, like *relaxing sounds* or *affirmation quotes of the day* that will make them feel relaxed.
+- **Targeted-ads** using data from analysis, as example for users who are more active, make offers on items that will support their activities / workouts
 
