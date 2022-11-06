@@ -9,14 +9,20 @@ Bellabeat's founder and Chief Creative Officer aware that analysis of health sma
 
 **Business task** : Analyze FitBit usage data to gain insight into how users use their smart devices and make recommendations for developing Bellabeat marketing strategies.
 
-Questions that arise to help the analysis process:
+questions that arise to help the analysis process:
 1. [What are the trends identified?](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/edit/main/README.md#what-are-the-trends-identified)
 2. [How can this trend be applied to Bellabeat subscribers?](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/blob/main/README.md#how-can-this-trend-be-applied-to-bellabeat-subscribers)
 3. [How can this trend help influence Bellabeat's marketing strategy?](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/blob/main/README.md#how-can-this-trend-help-influence-bellabeats-marketing-strategy)
 
+**Overview**
+- [Preparing the Data](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/blob/main/README.md#prepare)
+- [Data Cleaning](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/blob/main/README.md#data-cleaning)
+- [Exploratory Data Analysis](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/blob/main/README.md#exploratory-data-analysis)
+- [Data Analysis and Visualization](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/blob/main/README.md#data-analysis-and-visualization)
+- [Summary](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/blob/main/README.md#summary)
+- [Recommendation](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/blob/main/README.md#recommendation)
 
 ## Prepare
-
 ### Dataset information
 
 There are 18 files in CSV format that available. What user informations are available?
@@ -234,6 +240,8 @@ daily_activity %>%
 The graph shows that users do sedentary activities the most on daily basis followed by light activities.
 
 ## Data Analysis and Visualization
+📈 [Daily activity and daily sleep record](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/blob/main/README.md#1-daily-activity-and-daily-sleep-record-including-24-unique-user-ids)
+📈 [Hourly steps and hourly calories](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/blob/main/README.md#2-hourly-steps-and-hourly-calories-including-33-unique-user-ids)
 
 ### Merging datasets
 For a deeper understanding of user habits, multiple data sets will be combined because they have multiple fields in common (primary key). It can also be used to observe correlation between two variables.
@@ -384,7 +392,8 @@ Now we will see which category that took steps each day more
 ggplot(user_sleep_steps, aes(sleep_quality, mean_steps, fill = sleep_quality)) +
 geom_bar(stat = "identity") +
 labs(x=NULL, fill="Steps and sleep quality")
-```![image](https://user-images.githubusercontent.com/104981673/200159663-116db836-202b-40da-b4ce-3192582a1403.png)
+```
+![image](https://user-images.githubusercontent.com/104981673/200159663-116db836-202b-40da-b4ce-3192582a1403.png)
 
 Users who did not have enough sleep took more steps in daily basis.
 
