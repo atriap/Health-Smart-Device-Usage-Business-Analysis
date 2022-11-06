@@ -9,7 +9,7 @@ Bellabeat's founder and Chief Creative Officer aware that analysis of health sma
 
 **Business task** : Analyze FitBit usage data to gain insight into how users use their smart devices and make recommendations for developing Bellabeat marketing strategies.
 
-questions that arise to help the analysis process:
+Questions that arise to help the analysis process:
 1. [What are the trends identified?](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/edit/main/README.md#what-are-the-trends-identified)
 2. [How can this trend be applied to Bellabeat subscribers?](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/blob/main/README.md#how-can-this-trend-be-applied-to-bellabeat-subscribers)
 3. [How can this trend help influence Bellabeat's marketing strategy?](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/blob/main/README.md#how-can-this-trend-help-influence-bellabeats-marketing-strategy)
