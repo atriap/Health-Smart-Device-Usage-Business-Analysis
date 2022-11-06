@@ -31,7 +31,7 @@ There are 18 files in CSV format that available. What user informations are avai
 
 **Decide** and **focus** on which datasets are relevant and can answer the questions. In this case, I choose the following datasets:
 - Activity (daily)
-- Sleep (daily, minutes)
+- Sleep (daily)
 - Calories (minute)
 - Steps (hourly)
 - Heart rate
@@ -75,9 +75,6 @@ head(daily_activity)
 daily_sleep <- read.csv("sleepDay_merged.csv")
 head(daily_sleep)
 
-hourly_sleep <- read.csv("minuteSleep_merged.csv")
-head(hourly_sleep)
-
 hourly_calories <- read.csv("hourlyCalories_merged.csv")
 head(hourly_calories)
 
@@ -94,7 +91,6 @@ Most datasets are not "clean" enough. There might be duplicates, incorrect forma
 ```{r}
 n_distinct(daily_activity$Id)
 n_distinct(daily_sleep$Id)
-n_distinct(hourly_sleep$Id)
 n_distinct(hourly_steps$Id)
 n_distinct(hourly_calories$Id)
 n_distinct(heart_rate$Id)
@@ -105,7 +101,6 @@ n_distinct(heart_rate$Id)
 ```{r}
 sum(duplicated(daily_activity))
 sum(duplicated(daily_sleep))
-sum(duplicated(hourly_sleep))
 sum(duplicated(hourly_calories))
 sum(duplicated(hourly_steps))
 ```
@@ -120,12 +115,7 @@ daily_activity <- daily_activity %>%
 daily_sleep <- daily_sleep %>%
   clean_names() %>%
   unique()                        # to make sure the data are unique / not duplicated
-sum(duplicated(daily_sleep))      # re-check the amount of NA
-
-hourly_sleep <- hourly_sleep %>%
-  clean_names() %>%
-  unique()
-sum(duplicated(hourly_sleep))     # re-check the amount of NA after data cleaning
+sum(duplicated(daily_sleep))      # re-check the amount of NA after data cleaning
 
 hourly_steps <- hourly_steps %>%
   clean_names() %>%
@@ -140,7 +130,6 @@ hourly_calories <- hourly_calories %>%
 ```{r}
 sum(is.na(daily_activity))
 sum(is.na(daily_sleep))
-sum(is.na(hourly_sleep))
 sum(is.na(hourly_steps))
 sum(is.na(hourly_calories))
 ```
@@ -153,7 +142,6 @@ glimpse(daily_activity)
 ```
 ```{r}
 glimpse(daily_sleep)
-glimpse(hourly_sleep)
 ```
 ```{r}
 glimpse(hourly_steps)
@@ -182,12 +170,6 @@ glimpse(daily_sleep)
 
 ### Correcting data time format with as.POSIXct
 ```{r}
-hourly_sleep <- hourly_sleep %>%
-  rename(date_time = date) %>%
-  mutate(date_time = as.POSIXct(date_time, format = "%m/%d/%Y %I:%M:%S %p", tz = Sys.timezone()))
-glimpse(hourly_sleep)
-```
-```{r}
 hourly_steps <- hourly_steps %>%
   rename(date_time = activity_hour) %>%
   mutate(date_time = as.POSIXct(date_time, format = "%m/%d/%Y %I:%M:%S %p", tz = Sys.timezone()))
@@ -202,14 +184,12 @@ hourly_calories <- hourly_calories %>%
 glimpse(hourly_calories)
 ```
 
-
 ## Exploratory Data Analysis
 After the datasets are ready, the trend will be seen in each related fields for further understanding and deeper analysis.
 ### Descriptive Statistics
 ```{r}
 daily_activity %>% summary()
 daily_sleep %>% summary()
-hourly_sleep %>% summary()
 hourly_steps %>% summary()
 hourly_calories %>% summary()
 ```
@@ -234,7 +214,7 @@ The graph above shows that FitBit users **did not use the application every day*
 ### Plotting User activities category distribution using a pie chart
 How about their activity intensity each day?
 ```{r}
-library(ggrepel)              # importing another library to make visualization labels
+library(ggrepel)                   # importing another library to make visualization labels
 
 daily_activity %>%
   summarise(sedentary_mins = sum(sedentary_minutes), lightly_active_mins = sum(lightly_active_minutes), fairly_active_mins = sum(fairly_active_minutes), very_active_mins = sum(very_active_minutes)) %>%
@@ -395,6 +375,7 @@ ggplot(user_sleep_steps, aes(sleep_quality, fill = sleep_quality)) +
 labs(x=NULL, fill="Users sleep quality")
 ```
 ![image](https://user-images.githubusercontent.com/104981673/199957123-e7e0998c-9a5c-4f3e-8e6f-d8d5919dac23.png)
+
 The answer is, most of users have not enough sleep, means they sleep **less than 7 hours** each day.
 
 #### Comparing the mean of steps taken each user with their sleep quality
@@ -405,6 +386,7 @@ geom_bar(position = "dodge", stat = "identity") +
 labs(x=NULL, fill="Steps and sleep quality")
 ```
 ![image](https://user-images.githubusercontent.com/104981673/199957152-853f33e8-fea3-4fa4-a32e-5f0845690abb.png)
+
 Users who did not have enough sleep took more steps in daily basis.
 
 #### Plotting correlation between total steps taken and total sleeping minutes
@@ -480,10 +462,9 @@ labels <- c("Night", "Morning", "Afternoon", "Evening")
 hourly_steps_cal %>%
   mutate(time_of_day = cut(x=hour(date_time), breaks = breaks, labels = labels, include.lowest=TRUE))
 ```
-<img width="539" alt="image" src="https://user-images.githubusercontent.com/104981673/199957395-b54b8bd3-becb-4a0c-954a-089c9b6a8966.png">
+<img width="1000" alt="image" src="https://user-images.githubusercontent.com/104981673/199957395-b54b8bd3-becb-4a0c-954a-089c9b6a8966.png">
 
 ### Plotting amount of calories burned based on time of the day
-
 ```{r fig.height=10, fig.width=12}
 hourly_steps_cal %>% 
   separate(date_time, sep = " ", into = c("date","time")) %>% 
@@ -499,10 +480,10 @@ geom_bar(position = "dodge", stat = "identity") +
 labs(x=NULL, fill="Time of the day")
 ```
 ![amount of calories burned based on time of the day](https://user-images.githubusercontent.com/104981673/199957887-eb7e9235-2ef7-4679-892a-5df8e8a1990e.jpg)
+The graph shows that users tend to do activities that burn calories in the *Afternoon* (14.00) and rest in the *Evening*.
 
 ```{r}
 # modifying dataset to separate date and time column
-
 hourly_steps_cal <- hourly_steps_cal %>% 
   separate(date_time, sep = " ", into = c("date","time")) %>% 
   mutate(date = as_date(date), time = format(parse_date_time(as.character(time), "HMS"), format = "%H:%M")) %>%
@@ -514,13 +495,15 @@ n_distinct(hourly_steps_cal$id)
 ```
 
 ### Plotting amount of calories burned based on Day of the week
-
+We already know that users are more active in the Afternoon, but what day are they the most active?
 ```{r}
 ggplot(hourly_steps_cal, aes(day, calories, fill = day)) +
 geom_bar(position = "dodge", stat = "identity") +
 labs(x=NULL, title="Calories burned per day", fill="Day")
 ```
 ![image](https://user-images.githubusercontent.com/104981673/199958029-dd530a92-bf6c-4478-baa4-685d9c8fc8d3.png)
+
+
 
 ### Plotting amount of total steps taken each Day
 
@@ -530,6 +513,8 @@ geom_bar(position = "dodge", stat = "identity") +
 labs(x=NULL, y="Total steps", title="Total steps per Day", fill="Day")
 ```
 ![image](https://user-images.githubusercontent.com/104981673/199958063-701aeca1-6d9a-4b57-a920-41ceb65d85a7.png)
+
+
 
 ### Plotting correlation between total steps taken and amount of calories burned
 
