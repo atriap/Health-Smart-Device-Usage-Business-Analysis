@@ -14,7 +14,7 @@ Questions that arise to help the analysis process:
 2. [How can this trend be applied to Bellabeat subscribers?](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/blob/main/README.md#how-can-this-trend-be-applied-to-bellabeat-subscribers)
 3. [How can this trend help influence Bellabeat's marketing strategy?](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/blob/main/README.md#how-can-this-trend-help-influence-bellabeats-marketing-strategy)
 
-**Overview**
+### Overview
 - [Preparing the Data](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/blob/main/README.md#prepare)
 - [Data Cleaning](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/blob/main/README.md#data-cleaning)
 - [Exploratory Data Analysis](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/blob/main/README.md#exploratory-data-analysis)
