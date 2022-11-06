@@ -16,9 +16,6 @@ head(daily_activity)
 daily_sleep <- read.csv("sleepDay_merged.csv")
 head(daily_sleep)
 
-hourly_sleep <- read.csv("minuteSleep_merged.csv")
-head(hourly_sleep)
-
 hourly_calories <- read.csv("hourlyCalories_merged.csv")
 head(hourly_calories)
 
@@ -40,7 +37,6 @@ head(heart_rate)
 
 n_distinct(daily_activity$Id)
 n_distinct(daily_sleep$Id)
-n_distinct(hourly_sleep$Id)
 n_distinct(hourly_steps$Id)
 n_distinct(hourly_calories$Id)
 n_distinct(heart_rate$Id)
@@ -56,7 +52,6 @@ Heart rate dataset is removed because only contains 14 unique user ids and not r
 
 sum(duplicated(daily_activity))
 sum(duplicated(daily_sleep))
-sum(duplicated(hourly_sleep))
 sum(duplicated(hourly_calories))
 sum(duplicated(hourly_steps))
 
@@ -75,11 +70,6 @@ daily_sleep <- daily_sleep %>%
   clean_names() %>%
   unique()
 sum(duplicated(daily_sleep))
-
-hourly_sleep <- hourly_sleep %>%
-  clean_names() %>%
-  unique()
-sum(duplicated(hourly_sleep))
 
 
 hourly_steps <- hourly_steps %>%
@@ -101,7 +91,6 @@ hourly_calories <- hourly_calories %>%
 
 sum(is.na(daily_activity))
 sum(is.na(daily_sleep))
-sum(is.na(hourly_sleep))
 sum(is.na(hourly_steps))
 sum(is.na(hourly_calories))
 
@@ -116,7 +105,6 @@ sum(is.na(hourly_calories))
 
 glimpse(daily_activity)
 
-
 ```
 
 
@@ -124,7 +112,6 @@ glimpse(daily_activity)
 ```{r}
 glimpse(daily_sleep)
 
-glimpse(hourly_sleep)
 ```
 
 
@@ -165,14 +152,6 @@ daily_sleep <- daily_sleep %>%
 
 glimpse(daily_sleep)
 
-
-
-hourly_sleep <- hourly_sleep %>%
-  rename(date_time = date) %>%
-  mutate(date_time = as.POSIXct(date_time, format = "%m/%d/%Y %I:%M:%S %p", tz = Sys.timezone()))
-
-glimpse(hourly_sleep)
-
 ```
 
 
@@ -197,7 +176,6 @@ hourly_calories <- hourly_calories %>%
 
 glimpse(hourly_calories)
 
-
 ```
 
 
@@ -209,8 +187,6 @@ glimpse(hourly_calories)
 daily_activity %>% summary()
 
 daily_sleep %>% summary()
-
-hourly_sleep %>% summary()
 
 hourly_steps %>% summary()
 
@@ -395,10 +371,10 @@ user_intensities %>%
   labs(title="Total Activity vs. Calories burned", x="total activity minutes")
 
 
+
 ```
 
 Heavy activity becomes the only type of activities that have positive correlation with amount of calories burned. The heavier the activity, the more calories burned.
-
 
 
 ## Calculating users sleeping habit into categories
@@ -423,7 +399,6 @@ user_sleep_steps <- daily_activity_sleep %>%
 
 head(user_sleep_steps)
 glimpse(user_sleep_steps)
-
 
 
 ```
@@ -455,12 +430,9 @@ labs(x=NULL, fill="Steps and sleep quality")
 
 ```{r}
 
-
 ggplot(daily_activity_sleep, aes(x=total_steps, y= total_minutes_asleep)) + 
 geom_point() + geom_smooth() +
   labs(title="Total steps vs. Sleep Duration", x="Total steps", y="Sleep duration") 
-
-
 
 ```
 
@@ -488,6 +460,27 @@ geom_point() + geom_smooth() +
 ```
 The graph above shows that there is a negative correlation between total activity time and sleep duration. The longer activity time in a day, the less the sleep duration.
 
+
+
+```{r}
+user_intensities %>% 
+  mutate(total_activity = (sedentary+light+fair+very), total_awake = total_time_in_bed - total_minutes_asleep) %>%
+  ggplot(aes(x=total_awake, y=total_activity)) + 
+  geom_point() + geom_smooth()
+
+```
+
+The graph shows that there is a negative correlation between the total minutes awake and the time of activity carried out every day, meaning that the more active users, the longer the time before going to sleep even though they are already on the bed.
+
+```{r}
+
+user_intensities %>% 
+  mutate(total_awake = total_time_in_bed - total_minutes_asleep) %>%
+  arrange(total_awake) %>%
+  ggplot(aes(x=day, y=total_awake, fill=day)) + 
+  geom_bar(stat="identity")
+
+```
 
 
 
@@ -541,16 +534,6 @@ labs(x=NULL, fill="Time of the day")
 ```
 
 
-
-```{r}
-
-head(hourly_steps_cal)
-
-```
-
-
-
-
 ```{r}
 
 # modifying dataset to separate date and time column
@@ -599,7 +582,5 @@ geom_point() + geom_smooth() +
 
 
 ```
-
-
 
 
