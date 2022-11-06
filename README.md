@@ -23,6 +23,7 @@ Questions that arise to help the analysis process:
 - [Recommendation](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/blob/main/README.md#recommendation)
 
 ## Prepare
+[Back to overview](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/blob/main/README.md#overview)
 ### Dataset information
 
 There are 18 files in CSV format that available. What user informations are available?
@@ -92,6 +93,8 @@ head(heart_rate)
 ```
 
 ## Data Cleaning
+[Back to overview](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/blob/main/README.md#overview)
+
 Most datasets are not "clean" enough. There might be duplicates, incorrect formats, missing values, and inconsistent field names. Therefore, the following steps will be done to make the data ready to be analyzed.
 ### Checking unique ID each dataset
 ```{r}
@@ -191,6 +194,8 @@ glimpse(hourly_calories)
 ```
 # What are the trends identified?
 ## Exploratory Data Analysis
+[Back to overview](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/blob/main/README.md#overview)
+
 After the datasets are ready, the trend will be seen in each related fields for further understanding and deeper analysis.
 ### Descriptive Statistics
 ```{r}
@@ -240,6 +245,8 @@ daily_activity %>%
 The graph shows that users do sedentary activities the most on daily basis followed by light activities.
 
 ## Data Analysis and Visualization
+[Back to overview](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/blob/main/README.md#overview)
+
 📈 [Daily activity and daily sleep record](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/blob/main/README.md#1-daily-activity-and-daily-sleep-record-including-24-unique-user-ids)
 📈 [Hourly steps and hourly calories](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/blob/main/README.md#2-hourly-steps-and-hourly-calories-including-33-unique-user-ids)
 
@@ -537,6 +544,8 @@ The graph shows positive correlations between total steps taken each day and amo
 
 
 # Summary
+[Back to overview](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/blob/main/README.md#overview)
+
 - Users tend to remember logging in to the application / using the device in the midweek (Tuesday-Thursday) more than weekends
 - Active users are more enthusiastic about entering their data completely than less active users 
 - The trend shows that calories are burned the most in the afternoon and least burned at the evening. It indicates that users activity is heavier in the afternoon.
@@ -546,6 +555,8 @@ The graph shows positive correlations between total steps taken each day and amo
 
 
 # Recommendation
+[Back to overview](https://github.com/atriap/Health-Smart-Device-Usage-Business-Analysis/blob/main/README.md#overview)
+
 ## How can this trend be applied to Bellabeat subscribers?
 Both FitBit and Bellabeat are a fitness tracker brand, but Bellabeat is more targeted for women. These trends from FitBit datasets can be used to make recommendations to optimize Bellabeat's marketing strategy since they have relatively same features, like daily activity tracker (steps, distance, calories burned, sleeping hours, heart rate monitoring, etc)
 
