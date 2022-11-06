@@ -385,29 +385,30 @@ user_sleep_steps <- daily_activity_sleep %>%
 head(user_sleep_steps)
 glimpse(user_sleep_steps)
 ```
-<img width="700" alt="image" src="https://user-images.githubusercontent.com/104981673/199957068-96940438-070c-427d-9d9c-1dc626d6e1c1.png">
-
+<img width="1000" alt="image" src="https://user-images.githubusercontent.com/104981673/199957068-96940438-070c-427d-9d9c-1dc626d6e1c1.png">
 
 #### Calculating number of users with their sleeping habit
-
+After dividing into three sleeping habit categories, we will see how many users have enough sleep and those who are not
 ```{r}
 ggplot(user_sleep_steps, aes(sleep_quality, fill = sleep_quality)) +
   geom_bar() +
 labs(x=NULL, fill="Users sleep quality")
 ```
 ![image](https://user-images.githubusercontent.com/104981673/199957123-e7e0998c-9a5c-4f3e-8e6f-d8d5919dac23.png)
+The answer is, most of users have not enough sleep, means they sleep **less than 7 hours** each day.
 
 #### Comparing the mean of steps taken each user with their sleep quality
-
+Now we will see which category that took steps each day more
 ```{r}
 ggplot(user_sleep_steps, aes(sleep_quality, mean_steps, fill = sleep_quality)) +
 geom_bar(position = "dodge", stat = "identity") +
 labs(x=NULL, fill="Steps and sleep quality")
 ```
 ![image](https://user-images.githubusercontent.com/104981673/199957152-853f33e8-fea3-4fa4-a32e-5f0845690abb.png)
+Users who did not have enough sleep took more steps in daily basis.
 
 #### Plotting correlation between total steps taken and total sleeping minutes
-
+Does the number of steps taken each day affect the user's sleep time?
 ```{r}
 ggplot(daily_activity_sleep, aes(x=total_steps, y= total_minutes_asleep)) + 
 geom_point() + geom_smooth() +
@@ -415,13 +416,11 @@ geom_point() + geom_smooth() +
 ```
 ![image](https://user-images.githubusercontent.com/104981673/199957205-0a7503b2-e51c-4b8a-948c-126f4d31c8ff.png)
 
-The graph shows **no correlation** between total amount of steps taken and sleep duration.
+The graph shows **no correlation** between total number of steps taken and sleep duration.
 
 
-#### Plotting correlation between total activites throughout the day and total sleeping minutes
-
-Heavy activity is chosen to check the correlation
-
+#### Plotting correlation between total activites duration throughout the day and total sleeping minutes
+The number of steps per day doesn't affect the sleep duration, but how about with the total activity duration in a day?
 ```{r}
 user_intensities %>%
   mutate(total_activity = sedentary+light+fair+very) %>%
@@ -454,12 +453,14 @@ user_intensities %>%
   geom_bar(stat="identity")
 ```
 ![image](https://user-images.githubusercontent.com/104981673/200128104-b05cf705-f291-49db-927c-abab0fbe4b01.png)
+
 From this graph, it is known that most of users are having *difficulty* to actually sleep in **Sunday**, the day before work day, Monday. 
 
 
 ## 2. Hourly steps and hourly calories including 33 unique user ids.
 
 ### Merging datasets
+Another datasets are merged to analyze number of steps and calories burned hourly trends. 
 ```{r}
 hourly_steps_cal <- left_join(hourly_steps, hourly_calories, by=c("id", "date_time"))
 
@@ -470,7 +471,7 @@ n_distinct(hourly_steps_cal$id)
 ```
 
 ### Dividing time of the Day
-
+Analysis will be easier if hours divided into four time categories in a day, by *morning*, *afternoon*,  *evening*, and *night*.
 ```{r}
 breaks <- hour(hm("00:00", "6:00", "12:00", "18:00", "23:59"))
 
